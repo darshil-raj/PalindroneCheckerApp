@@ -1,38 +1,47 @@
 /**
  * =========================================================
- * MAIN CLASS - UseCase7PalindromeCheckerApp
+ * MAIN CLASS - UseCase8PalindromeCheckerApp
  * =========================================================
  *
- * Use Case 7: Deque Based Optimized Palindrome Checker
+ * Use Case 8: Linked List Based Palindrome Checker
  *
  * Description:
- * This class validates a palindrome using a Deque
- * (Double Ended Queue).
+ * This class validates a palindrome using a
+ * Singly Linked List.
  *
- * Characters are inserted into the deque and then
- * compared by removing elements from both ends:
+ * Steps:
+ * 1. Convert string into linked list
+ * 2. Find middle using Fast & Slow pointer
+ * 3. Reverse second half in-place
+ * 4. Compare both halves
  *
- * - removeFirst()
- * - removeLast()
- *
- * This avoids reversing the string and provides an
- * efficient front-to-back comparison approach.
- *
- * This use case demonstrates optimal bidirectional
- * traversal using Deque.
+ * Key Concepts:
+ * - Singly Linked List
+ * - Node Traversal
+ * - Fast and Slow Pointer Technique
+ * - In-Place Reversal
  *
  * @author Developer
- * @version 7.0
+ * @version 8.0
  */
 
-import java.util.Deque;
-import java.util.LinkedList;
 import java.util.Scanner;
 
-public class UseCase7PalindromeCheckerApp {
+public class UseCase8PalindromeCheckerApp {
+
+    // Node class for Singly Linked List
+    static class Node {
+        char data;
+        Node next;
+
+        Node(char data) {
+            this.data = data;
+            this.next = null;
+        }
+    }
 
     /**
-     * Application entry point for UC7.
+     * Application entry point for UC8.
      *
      * @param args Command-line arguments
      */
@@ -40,33 +49,65 @@ public class UseCase7PalindromeCheckerApp {
 
         Scanner scanner = new Scanner(System.in);
 
-        System.out.println("=== UC7: Deque Based Palindrome Checker ===");
+        System.out.println("=== UC8: Linked List Based Palindrome Checker ===");
         System.out.print("Enter a string: ");
         String input = scanner.nextLine();
 
-        // Normalize input (remove spaces & convert to lowercase)
+        // Normalize input
         input = input.replaceAll("\\s+", "").toLowerCase();
 
-        // Create Deque
-        Deque<Character> deque = new LinkedList<>();
+        // Convert string to linked list
+        Node head = null, tail = null;
 
-        // Insert characters into deque
         for (char ch : input.toCharArray()) {
-            deque.addLast(ch);
+            Node newNode = new Node(ch);
+            if (head == null) {
+                head = tail = newNode;
+            } else {
+                tail.next = newNode;
+                tail = newNode;
+            }
         }
 
+        if (head == null || head.next == null) {
+            System.out.println("Result: The string is a PALINDROME.");
+            scanner.close();
+            return;
+        }
+
+        // Step 1: Find middle using Fast & Slow pointer
+        Node slow = head;
+        Node fast = head;
+
+        while (fast != null && fast.next != null) {
+            slow = slow.next;
+            fast = fast.next.next;
+        }
+
+        // Step 2: Reverse second half (in-place)
+        Node prev = null;
+        Node current = slow;
+        Node nextNode;
+
+        while (current != null) {
+            nextNode = current.next;
+            current.next = prev;
+            prev = current;
+            current = nextNode;
+        }
+
+        // Step 3: Compare first half and reversed second half
+        Node firstHalf = head;
+        Node secondHalf = prev;
         boolean isPalindrome = true;
 
-        // Compare front and rear elements
-        while (deque.size() > 1) {
-
-            char frontChar = deque.removeFirst();
-            char rearChar = deque.removeLast();
-
-            if (frontChar != rearChar) {
+        while (secondHalf != null) {
+            if (firstHalf.data != secondHalf.data) {
                 isPalindrome = false;
                 break;
             }
+            firstHalf = firstHalf.next;
+            secondHalf = secondHalf.next;
         }
 
         // Display result
