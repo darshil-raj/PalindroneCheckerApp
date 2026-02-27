@@ -1,68 +1,72 @@
 /**
  * =========================================================
- * MAIN CLASS - UseCase9PalindromeCheckerApp
+ * MAIN CLASS - UseCase10PalindromeCheckerApp
  * =========================================================
  *
- * Use Case 9: Recursive Palindrome Checker
+ * Use Case 10: Case-Insensitive & Space-Ignored Palindrome
  *
  * Description:
- * This class validates whether a string is a palindrome
- * using recursion.
+ * This program checks whether a string is a palindrome
+ * while ignoring:
+ *  - Upper/Lower case differences
+ *  - Spaces
  *
  * Flow:
- * 1. Compare start and end characters.
- * 2. Recursively call function for inner substring.
- * 3. Base condition stops recursion.
+ * 1. Normalize string (remove spaces, convert to lowercase)
+ * 2. Apply palindrome checking logic
  *
  * Key Concepts:
- * - Recursion
- * - Base Condition
- * - Call Stack
+ * - String Preprocessing
+ * - Regular Expressions
+ *
+ * Data Structure Used:
+ * - String / Character Array
  *
  * @author Developer
- * @version 9.0
+ * @version 10.0
  */
 
 import java.util.Scanner;
 
-public class UseCase9PalindromeCheckerApp {
+public class UseCase10PalindromeCheckerApp {
 
     /**
-     * Recursive method to check palindrome
+     * Method to check palindrome
      */
-    public static boolean isPalindrome(String str, int start, int end) {
+    public static boolean isPalindrome(String str) {
 
-        // Base condition: If pointers cross or meet
-        if (start >= end) {
-            return true;
+        int left = 0;
+        int right = str.length() - 1;
+
+        while (left < right) {
+
+            if (str.charAt(left) != str.charAt(right)) {
+                return false;
+            }
+
+            left++;
+            right--;
         }
 
-        // If characters don't match
-        if (str.charAt(start) != str.charAt(end)) {
-            return false;
-        }
-
-        // Recursive call for inner substring
-        return isPalindrome(str, start + 1, end - 1);
+        return true;
     }
 
     /**
-     * Application entry point for UC9.
-     *
-     * @param args Command-line arguments
+     * Application entry point for UC10.
      */
     public static void main(String[] args) {
 
         Scanner scanner = new Scanner(System.in);
 
-        System.out.println("=== UC9: Recursive Palindrome Checker ===");
+        System.out.println("=== UC10: Case-Insensitive & Space-Ignored Palindrome Checker ===");
         System.out.print("Enter a string: ");
         String input = scanner.nextLine();
 
-        // Normalize input
+        // 🔹 Step 1: Normalize string
         input = input.replaceAll("\\s+", "").toLowerCase();
 
-        boolean result = isPalindrome(input, 0, input.length() - 1);
+        // 🔹 Step 2: Apply palindrome logic
+        boolean result = isPalindrome(input);
 
         if (result) {
             System.out.println("Result: The string is a PALINDROME.");
